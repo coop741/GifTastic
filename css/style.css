@@ -3,3 +3,13 @@ body {
 	color: red;2
 }
 
+.buttonTopic {
+	margin-right: 20px;
+	background-color: white;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.images {
+	padding-left: 30%;
+}

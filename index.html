@@ -22,19 +22,23 @@
       <div id="buttons">
       </div>
     </div>
-  </div>
+  </div><br><br>
 
   <!-- Second Row -->
   <div class="row">
     <!-- First Column -->
     <div class="col-sm-6">
       <form id="gif-search-form">
-        <label for="search-input">Add a Motorcyle</label>
+        <label for="search-input">Add a Video Game Character</label>
         <input type="text" id="search-input"><br>
         <!-- Button triggers new Gif button to be added -->
         <input id="add-gif" type="submit" value="Create a Button">
       </form>
     </div>
+  </div><br>
+
+  <!-- Third Row -->
+  <div class="row">
     <!-- Second Column -->
     <div class="col-xs-12 col-sm-6" id="gifs">
     </div>
@@ -86,7 +90,7 @@
   }
 
   //Click event to add gifs
-  $(document).on("click", ".topic", generateGifs);
+  $(document).on("click", ".buttonTopic", generateGifs);
   //Start and stop gifs
   $(document).on("click", ".gif", function() {
     var dataAnimate = $(this).attr('data-animate');
@@ -119,7 +123,7 @@
         // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
         var a = $("<button>");
         // Adding a class
-        a.addClass("topic");
+        a.addClass("buttonTopic");
         // Adding a data-attribute with a value of the topic at index i
         a.attr("data-name", topics[i]);
         // Providing the button's text with a value of the topic at index i
