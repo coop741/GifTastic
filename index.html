@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GifTastic Search</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!--  <link rel="stylesheet" type="text/css" href="assets/css/resetCSS.css"> -->
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!--  <script type="text/javascript" src="assets/javascript/app.js"></script> -->
+
+</head>
+<body>
+  <!-- First Row -->
+  <div class="row">
+    <!-- First (and only column) -->
+    <div class="col-sm-12">
+      <div id="buttons">
+      </div>
+    </div>
+  </div>
+
+  <!-- Second Row -->
+  <div class="row">
+    <!-- First Column -->
+    <div class="col-sm-6">
+      <form id="gif-search-form">
+        <label for="search-input">Add a Motorcyle</label>
+        <input type="text" id="search-input"><br>
+        <!-- Button triggers new Gif button to be added -->
+        <input id="add-gif" type="submit" value="Create a Button">
+      </form>
+    </div>
+    <!-- Second Column -->
+    <div class="col-xs-12 col-sm-6" id="gifs">
+    </div>
+  </div>
+
+
+
+
+
+  <script type="text/javascript">
+
+    var topics = ["Mario", "Sonic", "Master Chief", "Donkey Kong", "Yoshi"];
+    var userInput;
+
+//===================================================================
+
+  //Gif generation function
+  function generateGifs() {
+
+    //clears page of existing gifs rendered on the page
+    $("#gifs").empty();
+
+    //gif name saved from the clicked button's name
+    var newGif = $(this).attr('data-name');
+
+    //the API query URL is created
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + newGif + '&limit=10&rating=pg&api_key=dc6zaTOxFJmzC'
+    
+    //AJAX API call to Giphy
+    $.ajax({
+      url: queryURL,
+      method: 'GET'
+    }).done(function(response) {
+    
+      //Iterate through response after a successful query
+      //Create a clickable gif from the 10 results returned
+      for (var i = 0; i < response.data.length; i++) {
+        $('#gifs').prepend("<div class='images'><img class='gif' src='" + 
+          response.data[i].images.original_still.url + 
+          "' data-still= '" + 
+          response.data[i].images.original_still.url + 
+          "' data-animate='" + 
+          response.data[i].images.original.url + 
+          "' data-state='still'><p>Rating: " + 
+          response.data[i].rating + 
+          "</p></div>");
+      }
+    });
+  }
+
+  //Click event to add gifs
+  $(document).on("click", ".topic", generateGifs);
+  //Start and stop gifs
+  $(document).on("click", ".gif", function() {
+    var dataAnimate = $(this).attr('data-animate');
+    var dataStill = $(this).attr('data-still');
+    var dataState = $(this).attr('data-state');
+    if (dataState === "still") {
+      $(this).attr('src', dataAnimate);
+      $(this).attr('data-state', 'animate')        
+    }
+    else if (dataState  === 'animate') {
+      $(this).attr('src', dataStill);
+      $(this).attr('data-state', 'still')  
+    }
+  });
+
+//===================================================================
+// Render Buttons
+
+    // Function for displaying topic data
+    function renderButtons() {
+
+      // Deleting the topic buttons prior to adding new topic buttons
+      // (this is necessary otherwise we will have repeat buttons)
+      $("#buttons").empty();
+
+      // Looping through the array of topics
+      for (var i = 0; i < topics.length; i++) {
+
+        // Then dynamicaly generating buttons for each topic in the array.
+        // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
+        var a = $("<button>");
+        // Adding a class
+        a.addClass("topic");
+        // Adding a data-attribute with a value of the topic at index i
+        a.attr("data-name", topics[i]);
+        // Providing the button's text with a value of the topic at index i
+        a.text(topics[i]);
+        // Adding the button to the HTML
+        $("#buttons").append(a);
+      }
+    }
+
+    // This function handles events where one button is clicked
+    $("#add-gif").on("click", function(event) {
+      // event.preventDefault() prevents the form from trying to submit itself.
+      // We're using a form so that the user can hit enter instead of clicking the button if they want
+      event.preventDefault();
+
+      // This line will grab the text from the input box
+      var input = $("#search-input").val().trim();
+      // The topic from the textbox is then added to our array
+      topics.push(input);
+
+      // calling renderButtons which handles the processing of our topic array
+      renderButtons();
+    });
+
+    // Calling the renderButtons function at least once to display the initial list of topics
+    renderButtons();
+
+
+    </script>
+
+  </body>
+  </html>
+
